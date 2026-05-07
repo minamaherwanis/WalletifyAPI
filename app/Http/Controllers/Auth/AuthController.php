@@ -40,10 +40,14 @@ class AuthController extends Controller
 
     public function verifyEmail(Request $request)
     {
+        if ($request->token == null) {
+            return view('auth.verify-failed');
+        }
+
         $user = User::where('email_verification_token', $request->token)->first();
-         if (! $user) {
-        return view('auth.verify-failed');
-    }
+        if (! $user) {
+            return view('auth.verify-failed');
+        }
 
         DB::transaction(function () use ($user) {
 

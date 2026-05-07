@@ -23,6 +23,6 @@ Route::get('/paymob/response', [WalletController::class, 'response']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wallet/balance', [WalletController::class, 'getBalance']);
     Route::post('/wallet/deposit', [WalletController::class, 'deposit']);
-    Route::post('/wallet/logs', [WalletController::class, 'logs']);
+    Route::get('/wallet/logs', [WalletController::class, 'logs']);
     Route::post('/wallet/transfer', [WalletController::class, 'transfer']);
 });
