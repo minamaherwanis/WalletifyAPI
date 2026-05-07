@@ -8,10 +8,10 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\VerifyEmailMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -41,11 +41,10 @@ class AuthController extends Controller
     public function verifyEmail(Request $request)
     {
         $user = User::where('email_verification_token', $request->token)->first();
-        if (! $user) {
-            return response()->json([
-                'message' => 'Invalid token',
-            ], 404);
-        }
+         if (! $user) {
+        return view('auth.verify-failed');
+    }
+
         DB::transaction(function () use ($user) {
 
             $user->update([
@@ -53,7 +52,6 @@ class AuthController extends Controller
                 'email_verification_token' => null,
             ]);
 
-           
             if (! $user->wallet) {
                 $user->wallet()->create([
                     'balance' => 0,
@@ -62,9 +60,8 @@ class AuthController extends Controller
             }
         });
 
-        return response()->json([
-            'message' => 'Email verified successfully',
-        ]);
+        return view('auth.verify-success');
+
     }
 
     public function login(LoginRequst $request)

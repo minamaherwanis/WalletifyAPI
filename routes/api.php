@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\WalletController;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +22,7 @@ Route::get('/paymob/response', [WalletController::class, 'response']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wallet/balance', [WalletController::class, 'getBalance']);
-     Route::post('/wallet/deposit', [WalletController::class, 'deposit']);
-     Route::post('/wallet/logs', [WalletController::class, 'logs']);
-     
+    Route::post('/wallet/deposit', [WalletController::class, 'deposit']);
+    Route::post('/wallet/logs', [WalletController::class, 'logs']);
+    Route::post('/wallet/transfer', [WalletController::class, 'transfer']);
 });

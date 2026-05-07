@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\DepositMail;
+use App\Mail\TransferReceivedMail;
+use App\Mail\TransferSenderMail;
 use App\Models\Transactions;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Mail;
 use Str;
 
 class WalletController extends Controller
@@ -148,6 +154,9 @@ class WalletController extends Controller
                 ]);
 
                 $transaction->user->wallet->increment('balance', $amount);
+                Mail::to($transaction->user->email)->send(
+                    new DepositMail($amount, $transaction->user)
+                );
             }
         } else {
             if ($transaction->status == 'pending') {
@@ -184,5 +193,79 @@ class WalletController extends Controller
         ]);
     }
 
+    public function transfer(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'username' => ['required', 'exists:users,username'],
+            'amount' => ['required', 'numeric', 'min:1'],
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation Error',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $fromUser = $request->user();
+        $amount = $request->amount;
+
+        $toUser = User::where('username', $request->username)->first();
+
+        if (! $toUser) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        if (! $fromUser->wallet || ! $toUser->wallet) {
+            return response()->json([
+                'message' => 'Wallet not found',
+            ], 404);
+        }
+        if ($fromUser->id === $toUser->id) {
+            return response()->json([
+                'message' => 'Cannot transfer to yourself',
+            ], 400);
+        }
+
+        if ($fromUser->wallet->balance < $amount) {
+            return response()->json([
+                'message' => 'Insufficient balance',
+            ], 400);
+        }
+
+        DB::transaction(function () use ($fromUser, $toUser, $amount) {
+
+            $fromUser->wallet->decrement('balance', $amount);
+
+            Transactions::create([
+                'user_id' => $fromUser->id,
+                'type' => 'transfer',
+                'amount' => $amount,
+                'status' => 'success',
+                'description' => 'Transfer to @'.$toUser->username,
+            ]);
+
+            $toUser->wallet->increment('balance', $amount);
+
+            Transactions::create([
+                'user_id' => $toUser->id,
+                'type' => 'received',
+                'amount' => $amount,
+                'status' => 'success',
+                'description' => 'Received from @'.$fromUser->username,
+            ]);
+        });
+        Mail::to($toUser->email)->send(
+            new TransferReceivedMail($amount, $fromUser)
+        );
+        Mail::to($fromUser->email)->send(
+            new TransferSenderMail($amount, $toUser)
+        );
+
+        return response()->json([
+            'message' => 'Transfer completed successfully',
+        ]);
+    }
 }
