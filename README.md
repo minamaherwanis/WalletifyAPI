@@ -1,58 +1,128 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 💳 Walletify API
 
-## About Laravel
+**A secure, scalable digital wallet backend built with Laravel 11**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[![Laravel](https://img.shields.io/badge/Laravel-11-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8+-777BB4?style=flat&logo=php&logoColor=white)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)](https://mysql.com)
+[![Sanctum](https://img.shields.io/badge/Sanctum-Auth-FF2D20?style=flat)](https://laravel.com/docs/sanctum)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-22c55e?style=flat&logo=rocket&logoColor=white)](https://walletify-api.infinityfreeapp.com/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**[🚀 Live Demo →](https://walletify-api.infinityfreeapp.com/)**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+</div>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📌 Overview
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Walletify API is a fintech-style RESTful backend that provides complete wallet infrastructure — authentication, balance management, money transfers, deposits, transaction history, and payment gateway integration — built with clean code principles and modern Laravel architecture.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+<img width="1920" height="1080" alt="Walletify API Preview" src="https://github.com/user-attachments/assets/bf344676-4296-4677-8a98-4808a3d8b616" />
 
-## Agentic Development
+---
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## ✨ Features
+
+| Module | Capabilities |
+|---|---|
+| 🔐 **Auth** | Register, Login, Logout, Email Verification, Password Reset |
+| 💰 **Wallet** | Auto-create wallet, Deposit, Transfer, Balance tracking |
+| 📜 **Transactions** | Full history, Validation, Real-time balance updates |
+| 💳 **Payments** | Paymob integration, Secure callbacks, Payment verification |
+| 📧 **Notifications** | Transfer & deposit emails, Queue-ready, Blade templates |
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework:** Laravel 11
+- **Language:** PHP 8+
+- **Database:** MySQL
+- **Auth:** Laravel Sanctum
+- **Payments:** Paymob API
+- **Architecture:** RESTful, Service-based, API Resources
+
+---
+
+## 🚀 Installation
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/minamaherwanis/WalletifyAPI
+cd walletify-api
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+## ⚙️ Environment Variables
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```env
+APP_NAME=Walletify
+APP_URL=http://127.0.0.1:8000
 
-## Code of Conduct
+DB_DATABASE=walletify
+DB_USERNAME=root
+DB_PASSWORD=
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+PAYMOB_API_KEY=
+PAYMOB_INTEGRATION_ID=
+PAYMOB_IFRAME_ID=
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📡 API Endpoints
 
-## License
+<details>
+<summary><strong>Auth</strong></summary>
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/register` | Register new user |
+| POST | `/api/login` | Login & get token |
+
+</details>
+
+<details>
+<summary><strong>Wallet</strong></summary>
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/wallet/balance` | Wallet details & balance |
+| POST | `/wallet/deposit` | Deposit funds |
+| POST | `/wallet/transfer` | Transfer to another user |
+| GET | `/wallet/logs` | Transaction history |
+
+</details>
+
+---
+
+## 📦 Example Response
+
+```json
+{
+  "status": true,
+  "message": "Transfer completed successfully",
+  "data": {
+    "amount": 500,
+    "sender_balance": 1500,
+    "receiver_balance": 2500
+  }
+}
+```
+
+---
+
+## 👤 Author
+
+**Mina Maher** — Laravel Backend Developer
+
+[![GitHub](https://img.shields.io/badge/GitHub-minamaherwanis-181717?style=flat&logo=github)](https://github.com/minamaherwanis)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-minamaherwanis-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/mina-maher-b91369199)
